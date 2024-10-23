@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background-color: #ff0000;
+      background-image: 
+        linear-gradient(45deg, #000 25%, transparent 25%),
+        linear-gradient(-45deg, #000 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, #000 75%),
+        linear-gradient(-45deg, transparent 75%, #000 75%);
+      background-size: 20px 20px;
+      background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+      font-family: 'Oswald', sans-serif;
+      color: white;
+      display: flex;
+    }
+
+    .history-panel {
+      width: 250px;
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border-right: 2px solid #ffd700;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .history-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: repeating-linear-gradient(
+        to right,
+        #000,
+        #000 10px,
+        #ffd700 10px,
+        #ffd700 20px
+      );
+    }
+
+    .history-panel h2 {
+      margin-top: 0;
+      border-bottom: 2px solid #ffd700;
+      padding-bottom: 10px;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .history-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      overflow-y: auto;
+      max-height: calc(100vh - 100px);
+    }
+
+    .history-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+    }
+
+    .history-list li::before {
+      content: '🏁';
+      margin-right: 8px;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      background: rgba(0, 0, 0, 0.6);
+    }
+
+    .categories-panel {
+      width: 250px;
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 20px;
+      border-left: 2px solid #ffd700;
+      position: relative;
+    }
+
+    .categories-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: repeating-linear-gradient(
+        to right,
+        #000,
+        #000 10px,
+        #ffd700 10px,
+        #ffd700 20px
+      );
+    }
+
+    .categories-panel h2 {
+      margin-top: 0;
+      border-bottom: 2px solid #ffd700;
+      padding-bottom: 10px;
+      text-transform: uppercase;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .category-btn {
+      display: block;
+      width: 100%;
+      margin: 10px 0;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #ffd700;
+      color: white;
+      font-family: 'Oswald', sans-serif;
+      font-size: 1em;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: uppercase;
+    }
+
+    .category-btn:hover {
+      background: #ffd700;
+      color: black;
+      transform: scale(1.05);
+    }
+
+    .category-btn.active {
+      background: #ffd700;
+      color: black;
+    }
+
+    .generator-container {
+      text-align: center;
+      padding: 40px;
+      background: rgba(0, 0, 0, 0.7);
+      border: 4px solid #ffd700;
+      border-radius: 10px;
+      position: relative;
+    }
+
+    .generator-container::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      right: -10px;
+      bottom: -10px;
+      border: 2px solid #ffd700;
+      border-radius: 15px;
+      z-index: -1;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      margin-bottom: 30px;
+      text-transform: uppercase;
+      text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    h1::after {
+      content: '🏎️';
+      position: absolute;
+      right: -40px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    #generated-name {
+      font-size: 2.5em;
+      margin: 20px 0;
+      min-height: 1.2em;
+      color: #ffd700;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    button {
+      background-color: #ffd700;
+      border: none;
+      padding: 15px 30px;
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-transform: uppercase;
+      position: relative;
+      overflow: hidden;
+      color: black;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      background-color: #ffe44d;
+    }
+
+    button::after {
+      content: '🏁';
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="history-panel">
+    <h2>Race History</h2>
+    <ul class="history-list" id="history-list"></ul>
+  </div>
+  
+  <div class="main-content">
+    <div class="generator-container">
+      <h1>Speed Name Generator</h1>
+      <div id="generated-name"></div>
+      <button onclick="generateName()">Generate Name</button>
+    </div>
+  </div>
+
+  <div class="categories-panel">
+    <h2>Name Categories</h2>
+    <button class="category-btn active" onclick="setCategory('racers')">🏎️ Racers</button>
+    <button class="category-btn" onclick="setCategory('mechanics')">🔧 Mechanics</button>
+    <button class="category-btn" onclick="setCategory('teams')">👥 Teams</button>
+  </div>
+
+  <script>
+    const namesByCategory = {
+      racers: {
+        first: ['Max', 'Lewis', 'Fernando', 'Sebastian', 'Michael', 'Ayrton', 'Niki', 'James', 'Jackie', 'Mario'],
+        last: ['Verstappen', 'Hamilton', 'Alonso', 'Vettel', 'Schumacher', 'Senna', 'Lauda', 'Hunt', 'Stewart', 'Andretti']
+      },
+      mechanics: {
+        first: ['Adrian', 'Ross', 'Gordon', 'Patrick', 'Rory', 'Colin', 'Ken', 'Carroll', 'Enzo', 'Bruce'],
+        last: ['Newey', 'Brawn', 'Murray', 'Head', 'Byrne', 'Chapman', 'Miles', 'Shelby', 'Ferrari', 'McLaren']
+      },
+      teams: {
+        first: ['Red', 'Silver', 'Prancing', 'Racing', 'McLaren', 'Alpine', 'Aston', 'Williams', 'Haas', 'Alfa'],
+        last: ['Bull', 'Arrows', 'Horse', 'Point', 'F1', 'Racing', 'Martin', 'Racing', 'F1', 'Romeo']
+      }
+    };
+    
+    let currentCategory = 'racers';
+    const historyList = document.getElementById('history-list');
+    const generatedNameElement = document.getElementById('generated-name');
+    
+    function setCategory(category) {
+      currentCategory = category;
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.querySelector(`[onclick="setCategory('${category}')"]`).classList.add('active');
+      generateName();
+    }
+    
+    function generateName() {
+      const firstNames = namesByCategory[currentCategory].first;
+      const lastNames = namesByCategory[currentCategory].last;
+      
+      const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+      const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+      const fullName = `${firstName} ${lastName}`;
+      
+      generatedNameElement.textContent = fullName;
+      addToHistory(fullName);
+    }
+    
+    function addToHistory(name) {
+      const li = document.createElement('li');
+      li.textContent = name;
+      historyList.insertBefore(li, historyList.firstChild);
+      
+      if (historyList.children.length > 10) {
+        historyList.removeChild(historyList.lastChild);
+      }
+    }
+    
+    // Generate initial name
+    generateName();
+  </script>
+</body>
+</html>
